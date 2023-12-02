@@ -6,9 +6,9 @@ A scheduling app that allows you to connect with coffee chatters and arrange cof
 
 FRONTEND GITHUB REPO: https://github.com/nchu05/android-fall23
 
-![image](https://github.com/kych23/hack-challenge/assets/108193938/edd6c7e9-8aa2-49ad-88f4-0785d33cd6f3)
-![image](https://github.com/kych23/hack-challenge/assets/108193938/2addf3e2-8aef-4f4f-b259-5be528972687)
-![image](https://github.com/kych23/hack-challenge/assets/108193938/d8f58d77-3904-4f55-828d-07920bbdcec2)
+![image](https://github.com/kych23/hack-challenge/assets/108193938/edd6c7e9-8aa2-49ad-88f4-0785d33cd6f3 =250x250)
+![image](https://github.com/kych23/hack-challenge/assets/108193938/2addf3e2-8aef-4f4f-b259-5be528972687 =250x250)
+![image](https://github.com/kych23/hack-challenge/assets/108193938/d8f58d77-3904-4f55-828d-07920bbdcec2 =250x250)
 
 We noticed that when people are trying to coffee chat with others, in particular for club recruitment, they can face difficulties because the system for scheduling chats varies between organizations and coordinating schedules is tedious. With this people problem in mind, we decided to create “Latte Link,” a coffee chat scheduling app where people can see information about current members in an organization as well as the person’s availability.
 
