@@ -1,7 +1,7 @@
 # hack-challenge
 FA23 Cornell AppDev Hack Challenge
 
-Latte Link
+Latte Link:
 A scheduling app that allows you to connect with coffee chatters and arrange coffee chats from a range of Cornell organizations.
 
 *** add screenshots of the app *** add short description of the app
