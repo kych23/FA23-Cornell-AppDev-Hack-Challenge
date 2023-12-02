@@ -12,7 +12,6 @@ FRONTEND GITHUB REPO: https://github.com/nchu05/android-fall23
 <img width="229" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/3edb8a90-f0ad-4313-aa05-678a5da70812">
 <img width="224" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/cd6e1977-5636-4480-a803-9a06a4fa85ed">
 <img width="231" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/05e6a070-e03a-4175-b741-e142721289de">
-<img width="257" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/025b9d0a-852e-44a3-a4c6-90e0d924bd15">
 <img width="256" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/c8fe27f8-4978-468a-b2c9-de33bd133baa">
 
 
