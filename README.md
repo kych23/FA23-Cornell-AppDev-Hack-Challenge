@@ -1,4 +1,4 @@
-<img width="229" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/3edb8a90-f0ad-4313-aa05-678a5da70812"># hack-challenge
+# hack-challenge
 FA23 Cornell AppDev Hack Challenge
 
 Latte Link:
@@ -11,6 +11,7 @@ FRONTEND GITHUB REPO: https://github.com/nchu05/android-fall23
 <img width="231" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/2025632b-6cbe-4b7d-8fe3-9ea332f2662e">
 <img width="229" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/76eb825a-6c82-48a7-b950-7e5ee06c0fab">
 <img width="230" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/1b1cb555-7754-4e83-9d36-cc1b6dc6e68b">
+<img width="229" alt="image" src="https://github.com/kych23/hack-challenge/assets/108193938/3edb8a90-f0ad-4313-aa05-678a5da70812">
 
 
 
