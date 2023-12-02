@@ -1,6 +1,4 @@
-# FA23 Cornell AppDev Hack Challenge
-
-Latte Link:
+# Latte Link
 A scheduling app that allows you to connect with coffee chatters and arrange coffee chats from a range of Cornell organizations.
 
 FRONTEND GITHUB REPO: https://github.com/nchu05/android-fall23
