@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  hackchallenge:
+    volumes:
+     - /home/kgc42/lattelink.db:/usr/app/lattelink.db
+    image: "kych2204/hackchallenge:latest"
+    ports:
+      - "80:8000"
