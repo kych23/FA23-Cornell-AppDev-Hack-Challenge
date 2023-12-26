@@ -22,6 +22,10 @@ class LoginVC: UIViewController {
     private let enterButton = UIButton()
     private let newAccButton = UIButton()
     
+    // MARK: - Properties (Data)
+    
+    
+    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,33 +41,29 @@ class LoginVC: UIViewController {
     // MARK: - Setup the views
     private func setupEmailSection(){
         // Text Field's properties
-        emailBox.font = UIFont(name: "Roboto-Light", size: 14)
-        emailBox.frame = CGRect(x: 0, y: 0, width: 274, height: 35)
-        emailBox.textColor = UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1)
-        
-        emailBox.layer.borderColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1).cgColor
-        emailBox.layer.borderWidth = 4.22
+        emailBox.font = UIFont(name: "Roboto-Light", size: 20)
+        emailBox.frame = CGRect(x: 0, y: 0, width: 300, height: 45)
+        emailBox.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
         emailBox.borderStyle = .roundedRect
         emailBox.keyboardType = .default
+        emailBox.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
         
-        // creates the inner text field color
-        let insideLayer = CALayer()
-        insideLayer.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7).cgColor
-        insideLayer.bounds = emailBox.bounds
-        insideLayer.position = emailBox.center
+        // creates the gradient color and border using the static function
+        let gradientColor = UIColor(patternImage: LoginVC.gradientImage(bounds: emailBox.bounds, colors: [UIColor(red: 0.87, green: 0.72, blue: 0.65, alpha: 1), UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.53)]))
+        emailBox.layer.borderColor = gradientColor.cgColor
+        emailBox.layer.borderWidth = 3
         emailBox.layer.cornerRadius = 4.22
-        emailBox.layer.addSublayer(insideLayer)
-
+        
         view.addSubview(emailBox)
         emailBox.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalTo(centerText.snp.bottom).offset(100)
-            make.width.equalTo(274)
+            make.centerY.equalTo(centerText.snp.centerY).offset(100)
+            make.width.equalTo(300)
         }
         
         // Text Box's properties
         emailText.text = "Your Email"
-        emailText.textColor = UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1)
+        emailText.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
         emailText.font = UIFont(name: "Roboto-Medium", size: 14)
         emailText.frame = CGRect(x: 0, y: 0, width: 50, height: 10)
         emailText.textAlignment = .left
@@ -117,4 +117,22 @@ class LoginVC: UIViewController {
         
     }
     
+}
+
+// Function that creates a gradient border
+extension LoginVC {
+    static func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = colors.map(\.cgColor)
+        
+        // This makes it left to right, default is top to bottom
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        
+        return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
+        }
+    }
 }
