@@ -30,6 +30,7 @@ class LoginVC: UIViewController {
     private let pwdText = UILabel()
     private let emailBox = UITextField()
     private let pwdBox = UITextField()
+    private let topAccent = UIImageView()
     private let logo = UIImageView()
     private let centerText = UILabel()
     private let loginButton = UIButton()
@@ -37,12 +38,13 @@ class LoginVC: UIViewController {
     
     // MARK: - Properties (Data)
     private var loginButtonText = "Create Account"
-
+    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
         
+        setupTopAccent()
         setupCenterText()
         setupLogo()
         setupEmailSection()
@@ -51,6 +53,21 @@ class LoginVC: UIViewController {
     }
     
     // MARK: - Setup the views
+    private func setupTopAccent(){
+        topAccent.image = UIImage(named: "Accent")
+        topAccent.contentMode = .scaleAspectFit
+        topAccent.layer.cornerRadius = 10
+        
+        view.addSubview(topAccent)
+        
+        topAccent.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top).offset(10)
+            make.trailing.equalTo(view.snp.trailing)
+            make.height.equalTo(230)
+            make.width.equalTo(237)
+        }
+    }
+    
     private func setupEmailSection(){
         // Text Field's properties
         emailBox.font = UIFont(name: "Roboto-Light", size: 15)
@@ -129,7 +146,7 @@ class LoginVC: UIViewController {
     
     private func setupLogo() {
         logo.image = UIImage(named: "Logo")
-        //logo.contentMode = .scaleAspectFit
+        logo.contentMode = .scaleAspectFit
         logo.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         logo.layer.cornerRadius = 10
         
@@ -154,7 +171,7 @@ class LoginVC: UIViewController {
         
         centerText.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-70)
+            make.centerY.equalToSuperview().offset(-59)
         }
         
     }
@@ -200,9 +217,9 @@ class LoginVC: UIViewController {
     }
     
     // MARK: - button helper methods
-    @objc private func pushVC(_ VC: UIViewController) {
-//        let VCtoBePushed = VC(text: text, delegate: self)
-//        navigationController?.pushViewController(VCtoBePushed, animated: true)
+    @objc private func pushVC(_ VC: UIViewController){
+        //let VCtoBePushed = NewAccVC(text: text, delegate: self)
+        //navigationController?.pushViewController(VCtoBePushed, animated: true)
     }
 }
 
