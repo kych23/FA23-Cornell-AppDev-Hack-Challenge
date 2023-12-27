@@ -11,22 +11,20 @@ import UIKit
 import SnapKit
 import Alamofire
 
-func gradientImage(bounds: CGRect) -> UIImage {
+func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
     let gradientLayer = CAGradientLayer()
     gradientLayer.frame = bounds
-    gradientLayer.colors = [UIColor(red: 0.87, green: 0.72, blue: 0.65, alpha: 1).cgColor, UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.53).cgColor]
-    
+    gradientLayer.colors = colors.map(\.cgColor)
+
     // This makes it left to right, default is top to bottom
     gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
     gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-    
+
     let renderer = UIGraphicsImageRenderer(bounds: bounds)
     return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
     }
 }
-
 class LoginVC: UIViewController {
-    
     // MARK: - Properties (Subviews)
     private let emailText = UILabel()
     private let pwdText = UILabel()
@@ -34,13 +32,12 @@ class LoginVC: UIViewController {
     private let pwdBox = UITextField()
     private let logo = UIImageView()
     private let centerText = UILabel()
-    private let enterButton = UIButton()
+    private let loginButton = UIButton()
     private let newAccButton = UIButton()
     
     // MARK: - Properties (Data)
-    
-    
-    
+    private var loginButtonText = "Create Account"
+
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,13 +59,13 @@ class LoginVC: UIViewController {
         emailBox.borderStyle = .roundedRect
         emailBox.keyboardType = .default
         emailBox.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
-
+        
         // creates the gradient color and border using the static function
-        let gradientColor = UIColor(patternImage: gradientImage(bounds: emailBox.bounds))
+        let gradientColor = UIColor(patternImage: gradientImage(bounds: emailBox.bounds, colors: [UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8), UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)]))
         emailBox.layer.borderColor = gradientColor.cgColor
         emailBox.layer.borderWidth = 2
         emailBox.layer.cornerRadius = 4.22
-                
+        
         view.addSubview(emailBox)
         emailBox.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -82,7 +79,7 @@ class LoginVC: UIViewController {
         emailText.font = UIFont(name: "Roboto-Medium", size: 14)
         emailText.frame = CGRect(x: 0, y: 0, width: 50, height: 10)
         emailText.textAlignment = .left
-
+        
         view.addSubview(emailText)
         emailText.snp.makeConstraints { make in
             make.bottom.equalTo(emailBox.snp.top).offset(-10)
@@ -100,13 +97,13 @@ class LoginVC: UIViewController {
         pwdBox.borderStyle = .roundedRect
         pwdBox.keyboardType = .default
         pwdBox.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
-
+        
         // creates the gradient color and border using the static function
-        let gradientColor = UIColor(patternImage: gradientImage(bounds: pwdBox.bounds))
+        let gradientColor = UIColor(patternImage: gradientImage(bounds: pwdBox.bounds, colors: [UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1), UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8)]))
         pwdBox.layer.borderColor = gradientColor.cgColor
         pwdBox.layer.borderWidth = 2
         pwdBox.layer.cornerRadius = 4.22
-                
+        
         view.addSubview(pwdBox)
         pwdBox.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -120,7 +117,7 @@ class LoginVC: UIViewController {
         pwdText.font = UIFont(name: "Roboto-Medium", size: 14)
         pwdText.frame = CGRect(x: 0, y: 0, width: 50, height: 10)
         pwdText.textAlignment = .left
-
+        
         view.addSubview(pwdText)
         pwdText.snp.makeConstraints { make in
             make.bottom.equalTo(pwdBox.snp.top).offset(-10)
@@ -152,19 +149,62 @@ class LoginVC: UIViewController {
         centerText.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
         centerText.textAlignment = .center
         centerText.text = "Welcome to\nLatte Link!"
-
+        
         view.addSubview(centerText)
         
         centerText.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-70)
         }
-
+        
     }
     
     private func setupButtons() {
+        // Create Account Button
+        loginButton.setTitle("Create Account", for: .normal)
+        loginButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
+        loginButton.setTitleColor(UIColor(red: 0.35, green: 0.38, blue: 0.31, alpha: 1), for: .normal)
+        loginButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
+        loginButton.layer.cornerRadius = 10
+        loginButton.layer.borderWidth = 1
+        loginButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
         
+        loginButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
+        
+        view.addSubview(loginButton)
+        loginButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalTo(pwdBox.snp.centerY).offset(80)
+            make.width.equalTo(160)
+            make.height.equalTo(34)
+        }
+        
+        // New Account Button
+        let yourAttributes: [NSAttributedString.Key: Any] = [
+             .font: UIFont(name: "Roboto-Light", size: 12)!,
+             .foregroundColor: UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1),
+             .underlineStyle: NSUnderlineStyle.single.rawValue
+         ]
+        let attributedTitle = NSAttributedString(string: "I already have an account...", attributes: yourAttributes)
+        newAccButton.setAttributedTitle(attributedTitle, for: .normal)
+        
+        newAccButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
+        
+        view.addSubview(newAccButton)
+        newAccButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalTo(pwdBox.snp.centerY).offset(240)
+            make.width.equalTo(143)
+            make.height.equalTo(14)
+        }
+    }
+    
+    // MARK: - button helper methods
+    @objc private func pushVC(_ VC: UIViewController) {
+//        let VCtoBePushed = VC(text: text, delegate: self)
+//        navigationController?.pushViewController(VCtoBePushed, animated: true)
     }
 }
+
 
     
