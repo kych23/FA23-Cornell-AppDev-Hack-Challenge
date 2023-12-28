@@ -33,12 +33,6 @@ class NewAccVC: UIViewController {
         setupButtons()
     }
     
-//    init(text: String, delegate: UpdateTextDelegate) {
-//        self.text = text
-//        self.delegate = delegate
-//        super.init(nibName: nil, bundle: nil)
-//    }
-    
     // MARK: - Setup views
     private func setupTopAccent(){
         topAccent.image = UIImage(named: "Accent")
@@ -94,9 +88,7 @@ class NewAccVC: UIViewController {
          ]
         let attributedTitle = NSAttributedString(string: "I already have an account...", attributes: yourAttributes)
         loginButton.setAttributedTitle(attributedTitle, for: .normal)
-        
         loginButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
-        
         view.addSubview(loginButton)
         loginButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -106,22 +98,14 @@ class NewAccVC: UIViewController {
         }
         
         // Back Button
-        backButton.setTitle("Yourself", for: .normal)
-        backButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
-        backButton.setTitleColor(UIColor(red: 0.345, green: 0.192, blue: 0.004, alpha: 1), for: .normal)
-        backButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
-        backButton.layer.cornerRadius = 10
-        backButton.layer.borderWidth = 1
-        backButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
-        
+        backButton.setImage(UIImage(named: "LeftArrow"), for: .normal)
         backButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
-        
         view.addSubview(backButton)
         backButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(centerText.snp.bottom).offset(60)
-            make.width.equalTo(220)
-            make.height.equalTo(35)
+            make.leading.equalTo(view.snp.leading).offset(35)
+            make.top.equalTo(view.snp.top).offset(89)
+            make.width.equalTo(26)
+            make.height.equalTo(26)
         }
         
         // User Button

@@ -5,4 +5,8 @@
 //  Created by Kyle Chu on 12/27/23.
 //
 
-import Foundation
+import UIKit
+
+class HomeVC: UIViewController {
+    
+}

@@ -16,16 +16,19 @@ class LoginVC: UIViewController {
     private let topAccent = UIImageView()
     private let logo = UIImageView()
     private let centerText = UILabel()
-    private let loginButton = UIButton()
-
     private let emailText = UILabel()
     private let pwdText = UILabel()
-    private let emailBox = UITextField()
-    private let pwdBox = UITextField()
-    private let newAccButton = UIButton()
+    private var emailBox = UITextField()
+    private var pwdBox = UITextField()
+    private var underlinedButton = UIButton()
+    private var greenButton = UIButton()
     
     // MARK: - Properties (Data)
     private var loginButtonText = "Create Account"
+    // true for if the current page is login, false if the current page is create
+    private var login: Bool = true
+    // contains a dictionary of the UIButton instance to its UIViewController that it pushes
+    public var buttonVCMap: [UIButton: UIViewController.Type] = [:]
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -37,7 +40,8 @@ class LoginVC: UIViewController {
         setupLogo()
         setupEmailSection()
         setupPwdSection()
-        setupButtons()
+        setupCustomButton()
+        setupUnderlinedButton()
     }
     
     // MARK: - Setup the views
@@ -89,25 +93,11 @@ class LoginVC: UIViewController {
     }
 
     private func setupEmailSection(){
-        // Text Field's properties
-        emailBox.font = UIFont(name: "Roboto-Light", size: 15)
-        emailBox.frame = CGRect(x: 0, y: 0, width: 280, height: 45)
-        emailBox.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
-        emailBox.borderStyle = .roundedRect
-        emailBox.keyboardType = .default
-        emailBox.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
-        
-        // creates the gradient color and border using the static function
-        let gradientColor = UIColor(patternImage: gradientImage(bounds: emailBox.bounds, colors: [UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8), UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)]))
-        emailBox.layer.borderColor = gradientColor.cgColor
-        emailBox.layer.borderWidth = 2
-        emailBox.layer.cornerRadius = 4.22
-        
+        emailBox = CustomTextField(font: UIFont(name: "Roboto-Light", size: 15)!, width: 299, height: 37)
         view.addSubview(emailBox)
         emailBox.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(centerText.snp.centerY).offset(100)
-            make.width.equalTo(280)
         }
         
         // Text Box's properties
@@ -127,25 +117,11 @@ class LoginVC: UIViewController {
     }
     
     private func setupPwdSection() {
-        // Text Field's properties
-        pwdBox.font = UIFont(name: "Roboto-Light", size: 15)
-        pwdBox.frame = CGRect(x: 0, y: 0, width: 280, height: 45)
-        pwdBox.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
-        pwdBox.borderStyle = .roundedRect
-        pwdBox.keyboardType = .default
-        pwdBox.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
-        
-        // creates the gradient color and border using the static function
-        let gradientColor = UIColor(patternImage: gradientImage(bounds: pwdBox.bounds, colors: [UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1), UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8)]))
-        pwdBox.layer.borderColor = gradientColor.cgColor
-        pwdBox.layer.borderWidth = 2
-        pwdBox.layer.cornerRadius = 4.22
-        
+        pwdBox = CustomTextField(font: UIFont(name: "Roboto-Light", size: 15)!, width: 299, height: 37)
         view.addSubview(pwdBox)
         pwdBox.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(emailBox.snp.centerY).offset(80)
-            make.width.equalTo(280)
         }
         
         // Text Box's properties
@@ -164,39 +140,31 @@ class LoginVC: UIViewController {
         }
     }
     
-    private func setupButtons() {
-        // Create Account Button
-        newAccButton.setTitle("Create Account", for: .normal)
-        newAccButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
-        newAccButton.setTitleColor(UIColor(red: 0.35, green: 0.38, blue: 0.31, alpha: 1), for: .normal)
-        newAccButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
-        newAccButton.layer.cornerRadius = 10
-        newAccButton.layer.borderWidth = 1
-        newAccButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
+    private func setupCustomButton() {
+        // Green Button
+        greenButton = CustomButton(title: "Create Account", width: 160, height: 34)
+        greenButton.addTarget(self, action: #selector(pushVC(_:)), for: .touchUpInside)
+        buttonVCMap[greenButton] = NewAccVC.self
         
-        newAccButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
-        
-        view.addSubview(newAccButton)
-        newAccButton.snp.makeConstraints { make in
+        view.addSubview(greenButton)
+        greenButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(pwdBox.snp.centerY).offset(80)
-            make.width.equalTo(160)
-            make.height.equalTo(34)
         }
-        
-        // Login Button
+    }
+    private func setupUnderlinedButton() {
+        // Underlined Button
         let yourAttributes: [NSAttributedString.Key: Any] = [
              .font: UIFont(name: "Roboto-Light", size: 12)!,
              .foregroundColor: UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1),
              .underlineStyle: NSUnderlineStyle.single.rawValue
          ]
         let attributedTitle = NSAttributedString(string: "I already have an account...", attributes: yourAttributes)
-        loginButton.setAttributedTitle(attributedTitle, for: .normal)
+        underlinedButton.setAttributedTitle(attributedTitle, for: .normal)
+        underlinedButton.addTarget(self, action: #selector(swapUI), for: .touchUpInside)
         
-        loginButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
-        
-        view.addSubview(loginButton)
-        loginButton.snp.makeConstraints { make in
+        view.addSubview(underlinedButton)
+        underlinedButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(pwdBox.snp.centerY).offset(240)
             make.width.equalTo(143)
@@ -205,44 +173,98 @@ class LoginVC: UIViewController {
     }
     
     // MARK: - button helper methods (TODO)
-    @objc private func pushVC(_ VC: UIViewController){
-        //let VCtoBePushed = NewAccVC(text: text, delegate: self)
-        //navigationController?.pushViewController(VCtoBePushed, animated: true)
+    @objc func pushVC(_ sender: UIButton) {
+        if let vcType = buttonVCMap[sender] {
+            let vc = vcType.init()
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
-}
 
-
-func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
-    let gradientLayer = CAGradientLayer()
-    gradientLayer.frame = bounds
-    gradientLayer.colors = colors.map(\.cgColor)
-
-    // This makes it left to right, default is top to bottom
-    gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-    gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-
-    let renderer = UIGraphicsImageRenderer(bounds: bounds)
-    return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
+    // MARK: - changes the subviews from login account to create account or vice versa
+    @objc private func swapUI() {
+        if login {
+            // changes text
+            centerText.text = "Welcome Back to\nLatte Link!"
+            // swaps the bottom, underlined buttom
+            let yourAttributes: [NSAttributedString.Key: Any] = [
+                 .font: UIFont(name: "Roboto-Light", size: 12)!,
+                 .foregroundColor: UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1),
+                 .underlineStyle: NSUnderlineStyle.single.rawValue
+            ]
+            let attributedTitle = NSAttributedString(string: "I don't have an account...", attributes: yourAttributes)
+            underlinedButton.setAttributedTitle(attributedTitle, for: .normal)
+            // swaps the login button to create
+            greenButton.setTitle("Sign In", for: .normal)
+            greenButton.addTarget(self, action: #selector(pushVC(_:)), for: .touchUpInside)
+            buttonVCMap[greenButton] = HomeVC.self
+            
+            login = false
+        } else {
+            underlinedButton.removeTarget(nil, action: nil, for: .allEvents)
+            setupCenterText()
+            setupUnderlinedButton()
+            greenButton.setTitle("Create Account", for: .normal)
+            buttonVCMap[greenButton] = NewAccVC.self
+            login = true
+        }
     }
-}
-
-class customTextField: UITextField {
     
 }
 
-class CustomButton: UIButton {
-    init(title: String, action: Selector, width: Int, height: Int) {
+
+class CustomTextField: UITextField {
+    init(font: UIFont, width: Int, height: Int) {
         super.init(frame: .zero)
+        self.font = font
+        self.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        self.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
+        self.borderStyle = .roundedRect
+        self.keyboardType = .default
+        self.autocapitalizationType = .none
+        self.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
+        let gradientColor = UIColor(patternImage: gradientImage(bounds: self.bounds, colors: [UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8), UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)]))
+        self.layer.borderColor = gradientColor.cgColor
+        self.layer.borderWidth = 2
+        self.layer.cornerRadius = 4.22
+        self.snp.makeConstraints { make in
+            make.width.equalTo(width)
+            make.height.equalTo(height)
+        }
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = colors.map(\.cgColor)
+
+        // This makes it left to right, default is top to bottom
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
+        }
+    }
+}
+
+class CustomButton: UIButton {
+    init(title: String, width: Int, height: Int) {
+        super.init(frame: .zero)
+        self.setTitle(title, for: .normal)
         self.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
         self.setTitleColor(UIColor(red: 0.345, green: 0.192, blue: 0.004, alpha: 1), for: .normal)
         self.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
         self.layer.cornerRadius = 10
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
+        self.snp.makeConstraints { make in
+            make.width.equalTo(width)
+            make.height.equalTo(height)
+        }
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
-    
