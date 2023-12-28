@@ -11,29 +11,17 @@ import UIKit
 import SnapKit
 import Alamofire
 
-func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
-    let gradientLayer = CAGradientLayer()
-    gradientLayer.frame = bounds
-    gradientLayer.colors = colors.map(\.cgColor)
-
-    // This makes it left to right, default is top to bottom
-    gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-    gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-
-    let renderer = UIGraphicsImageRenderer(bounds: bounds)
-    return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
-    }
-}
 class LoginVC: UIViewController {
     // MARK: - Properties (Subviews)
-    private let emailText = UILabel()
-    private let pwdText = UILabel()
-    private let emailBox = UITextField()
-    private let pwdBox = UITextField()
     private let topAccent = UIImageView()
     private let logo = UIImageView()
     private let centerText = UILabel()
     private let loginButton = UIButton()
+
+    private let emailText = UILabel()
+    private let pwdText = UILabel()
+    private let emailBox = UITextField()
+    private let pwdBox = UITextField()
     private let newAccButton = UIButton()
     
     // MARK: - Properties (Data)
@@ -68,6 +56,38 @@ class LoginVC: UIViewController {
         }
     }
     
+    private func setupLogo() {
+        logo.image = UIImage(named: "Logo")
+        logo.contentMode = .scaleAspectFit
+        logo.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+        logo.layer.cornerRadius = 10
+        
+        view.addSubview(logo)
+        
+        logo.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(centerText.snp.top).offset(-40)
+        }
+    }
+    
+    private func setupCenterText() {
+        centerText.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        centerText.font = UIFont(name: "Roboto-Bold", size: 30)
+        centerText.numberOfLines = 0
+        centerText.lineBreakMode = .byWordWrapping
+        centerText.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
+        centerText.textAlignment = .center
+        centerText.text = "Welcome to\nLatte Link!"
+        
+        view.addSubview(centerText)
+        
+        centerText.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-59)
+        }
+        
+    }
+
     private func setupEmailSection(){
         // Text Field's properties
         emailBox.font = UIFont(name: "Roboto-Light", size: 15)
@@ -144,71 +164,39 @@ class LoginVC: UIViewController {
         }
     }
     
-    private func setupLogo() {
-        logo.image = UIImage(named: "Logo")
-        logo.contentMode = .scaleAspectFit
-        logo.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-        logo.layer.cornerRadius = 10
-        
-        view.addSubview(logo)
-        
-        logo.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(centerText.snp.top).offset(-40)
-        }
-    }
-    
-    private func setupCenterText() {
-        centerText.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        centerText.font = UIFont(name: "Roboto-Bold", size: 30)
-        centerText.numberOfLines = 0
-        centerText.lineBreakMode = .byWordWrapping
-        centerText.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
-        centerText.textAlignment = .center
-        centerText.text = "Welcome to\nLatte Link!"
-        
-        view.addSubview(centerText)
-        
-        centerText.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-59)
-        }
-        
-    }
-    
     private func setupButtons() {
         // Create Account Button
-        loginButton.setTitle("Create Account", for: .normal)
-        loginButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
-        loginButton.setTitleColor(UIColor(red: 0.35, green: 0.38, blue: 0.31, alpha: 1), for: .normal)
-        loginButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
-        loginButton.layer.cornerRadius = 10
-        loginButton.layer.borderWidth = 1
-        loginButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
+        newAccButton.setTitle("Create Account", for: .normal)
+        newAccButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
+        newAccButton.setTitleColor(UIColor(red: 0.35, green: 0.38, blue: 0.31, alpha: 1), for: .normal)
+        newAccButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
+        newAccButton.layer.cornerRadius = 10
+        newAccButton.layer.borderWidth = 1
+        newAccButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
         
-        loginButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
+        newAccButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
         
-        view.addSubview(loginButton)
-        loginButton.snp.makeConstraints { make in
+        view.addSubview(newAccButton)
+        newAccButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(pwdBox.snp.centerY).offset(80)
             make.width.equalTo(160)
             make.height.equalTo(34)
         }
         
-        // New Account Button
+        // Login Button
         let yourAttributes: [NSAttributedString.Key: Any] = [
              .font: UIFont(name: "Roboto-Light", size: 12)!,
              .foregroundColor: UIColor(red: 0.345, green: 0.184, blue: 0.055, alpha: 1),
              .underlineStyle: NSUnderlineStyle.single.rawValue
          ]
         let attributedTitle = NSAttributedString(string: "I already have an account...", attributes: yourAttributes)
-        newAccButton.setAttributedTitle(attributedTitle, for: .normal)
+        loginButton.setAttributedTitle(attributedTitle, for: .normal)
         
-        newAccButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
         
-        view.addSubview(newAccButton)
-        newAccButton.snp.makeConstraints { make in
+        view.addSubview(loginButton)
+        loginButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(pwdBox.snp.centerY).offset(240)
             make.width.equalTo(143)
@@ -216,7 +204,7 @@ class LoginVC: UIViewController {
         }
     }
     
-    // MARK: - button helper methods
+    // MARK: - button helper methods (TODO)
     @objc private func pushVC(_ VC: UIViewController){
         //let VCtoBePushed = NewAccVC(text: text, delegate: self)
         //navigationController?.pushViewController(VCtoBePushed, animated: true)
@@ -224,4 +212,37 @@ class LoginVC: UIViewController {
 }
 
 
+func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
+    let gradientLayer = CAGradientLayer()
+    gradientLayer.frame = bounds
+    gradientLayer.colors = colors.map(\.cgColor)
+
+    // This makes it left to right, default is top to bottom
+    gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+    gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
+    let renderer = UIGraphicsImageRenderer(bounds: bounds)
+    return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
+    }
+}
+
+class customTextField: UITextField {
+    
+}
+
+class CustomButton: UIButton {
+    init(title: String, action: Selector, width: Int, height: Int) {
+        super.init(frame: .zero)
+        self.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
+        self.setTitleColor(UIColor(red: 0.345, green: 0.192, blue: 0.004, alpha: 1), for: .normal)
+        self.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
+        self.layer.cornerRadius = 10
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
     
