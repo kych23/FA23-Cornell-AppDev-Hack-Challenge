@@ -11,6 +11,22 @@ import UIKit
 import SnapKit
 import Alamofire
 
+extension UIViewController {
+    // contains a dictionary of the UIButton instance to its UIViewController that it pushes
+    static var buttonVCMap: [UIButton: UIViewController.Type] = [:]
+    
+    @objc func pushVC(_ sender: UIButton) {
+        if let vcType = UIViewController.buttonVCMap[sender] {
+            let vc = vcType.init()
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    @objc func popVC() {
+        navigationController?.popViewController(animated: true)
+    }
+}
+
 class LoginVC: UIViewController {
     // MARK: - Properties (Subviews)
     private let topAccent = UIImageView()
@@ -26,15 +42,14 @@ class LoginVC: UIViewController {
     // MARK: - Properties (Data)
     private var loginButtonText = "Create Account"
     // true for if the current page is login, false if the current page is create
-    private var login: Bool = true
-    // contains a dictionary of the UIButton instance to its UIViewController that it pushes
-    public var buttonVCMap: [UIButton: UIViewController.Type] = [:]
+    public var login: Bool = true
+    
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-        
+        self.navigationItem.hidesBackButton = true
         setupTopAccent()
         setupCenterText()
         setupLogo()
@@ -144,7 +159,7 @@ class LoginVC: UIViewController {
         // Green Button
         greenButton = CustomButton(title: "Create Account", width: 160, height: 34)
         greenButton.addTarget(self, action: #selector(pushVC(_:)), for: .touchUpInside)
-        buttonVCMap[greenButton] = NewAccVC.self
+        UIViewController.buttonVCMap[greenButton] = NewAccVC.self
         
         view.addSubview(greenButton)
         greenButton.snp.makeConstraints { make in
@@ -172,16 +187,8 @@ class LoginVC: UIViewController {
         }
     }
     
-    // MARK: - button helper methods (TODO)
-    @objc func pushVC(_ sender: UIButton) {
-        if let vcType = buttonVCMap[sender] {
-            let vc = vcType.init()
-            navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-
     // MARK: - changes the subviews from login account to create account or vice versa
-    @objc private func swapUI() {
+    @objc internal func swapUI() {
         if login {
             // changes text
             centerText.text = "Welcome Back to\nLatte Link!"
@@ -196,36 +203,33 @@ class LoginVC: UIViewController {
             // swaps the login button to create
             greenButton.setTitle("Sign In", for: .normal)
             greenButton.addTarget(self, action: #selector(pushVC(_:)), for: .touchUpInside)
-            buttonVCMap[greenButton] = HomeVC.self
-            
+            UIViewController.buttonVCMap[greenButton] = HomeVC.self
             login = false
         } else {
-            underlinedButton.removeTarget(nil, action: nil, for: .allEvents)
             setupCenterText()
             setupUnderlinedButton()
             greenButton.setTitle("Create Account", for: .normal)
-            buttonVCMap[greenButton] = NewAccVC.self
+            UIViewController.buttonVCMap[greenButton] = NewAccVC.self
             login = true
         }
     }
     
 }
 
-
 class CustomTextField: UITextField {
     init(font: UIFont, width: Int, height: Int) {
         super.init(frame: .zero)
         self.font = font
-        self.frame = CGRect(x: 0, y: 0, width: width, height: height)
         self.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
         self.borderStyle = .roundedRect
         self.keyboardType = .default
         self.autocapitalizationType = .none
         self.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
+        self.layer.cornerRadius = 4.22
         let gradientColor = UIColor(patternImage: gradientImage(bounds: self.bounds, colors: [UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8), UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)]))
         self.layer.borderColor = gradientColor.cgColor
         self.layer.borderWidth = 2
-        self.layer.cornerRadius = 4.22
+
         self.snp.makeConstraints { make in
             make.width.equalTo(width)
             make.height.equalTo(height)
@@ -234,14 +238,14 @@ class CustomTextField: UITextField {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
+    private func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.colors = colors.map(\.cgColor)
 
         // This makes it left to right, default is top to bottom
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        gradientLayer.startPoint = CGPoint(x: Double.random(in:0.0...1.0), y: Double.random(in:0.0...1.0))
+        gradientLayer.endPoint = CGPoint(x: Double.random(in:0.0...1.0), y: Double.random(in:0.0...1.0))
 
         let renderer = UIGraphicsImageRenderer(bounds: bounds)
         return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
@@ -266,5 +270,65 @@ class CustomButton: UIButton {
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class CustomTextView: UITextView {
+    init(font: UIFont, width: Int, height: Int) {
+        super.init(frame: .zero, textContainer: nil)
+        self.font = font
+        self.textColor = UIColor(red: 0.35, green: 0.18, blue: 0.05, alpha: 1)
+        self.keyboardType = .default
+        self.autocapitalizationType = .none
+        self.backgroundColor = UIColor(red: 0.973, green: 0.953, blue: 0.937, alpha: 0.7)
+//        let gradientColor = UIColor(patternImage: gradientImage(bounds: self.bounds, colors: [UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8), UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)]))
+        //self.layer.borderColor = gradientColor.cgColor
+       // self.layer.borderWidth = 2
+        self.layer.cornerRadius = 8
+        self.layer.masksToBounds = true
+        self.isScrollEnabled = true
+
+        self.snp.makeConstraints { make in
+            make.width.equalTo(width)
+            make.height.equalTo(height)
+        }
+        
+        addGradientBorder(width: CGFloat(width), height: CGFloat(height), colors: [
+        UIColor(red: 0.6, green: 0.62, blue: 0.55, alpha: 0.8),
+        UIColor(red: 0.84, green: 0.74, blue: 0.65, alpha: 1)
+        ])
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+//   private func gradientImage(bounds: CGRect, colors: [UIColor]) -> UIImage {
+//        let gradientLayer = CAGradientLayer()
+//        gradientLayer.frame = bounds
+//        gradientLayer.colors = colors.map(\.cgColor)
+//
+//        // This makes it left to right, default is top to bottom
+//        gradientLayer.startPoint = CGPoint(x: Double.random(in:0.0...1.0), y: Double.random(in:0.0...1.0))
+//        gradientLayer.endPoint = CGPoint(x: Double.random(in:0.0...1.0), y: Double.random(in:0.0...1.0))
+//
+//        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+//        return renderer.image { ctx in gradientLayer.render(in: ctx.cgContext)
+//        }
+//    }
+    private func addGradientBorder(width: CGFloat, height: CGFloat, colors: [UIColor]) {
+    let gradientLayer = CAGradientLayer()
+    gradientLayer.frame = CGRect(x: 0, y: 0, width: width, height: height)
+    gradientLayer.colors = colors.map(\.cgColor)
+    gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+    gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+    gradientLayer.cornerRadius = layer.cornerRadius
+
+    let shape = CAShapeLayer()
+    shape.lineWidth = 1
+    shape.path = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
+    shape.strokeColor = UIColor.black.cgColor
+    shape.fillColor = UIColor.clear.cgColor
+    gradientLayer.mask = shape
+
+    layer.addSublayer(gradientLayer)
     }
 }
