@@ -15,18 +15,18 @@ class NewAccVC: UIViewController {
     private let centerText = UILabel()
     
     private let loginButton = UIButton()
-    private let userButton = UIButton()
-    private let orgButton = UIButton()
+    private var userButton = UIButton()
+    private var orgButton = UIButton()
     private let backButton = UIButton()
     
     // MARK:  Properties (data)
-    private var text: String = ""
 
     // loads the view
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-        
+        self.navigationItem.hidesBackButton = true
+
         setupTopAccent()
         setupCenterText()
         setupLogo()
@@ -53,9 +53,7 @@ class NewAccVC: UIViewController {
         logo.contentMode = .scaleAspectFit
         logo.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         logo.layer.cornerRadius = 10
-        
         view.addSubview(logo)
-        
         logo.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(centerText.snp.top).offset(-40)
@@ -76,7 +74,6 @@ class NewAccVC: UIViewController {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-59)
         }
-        
     }
     
     private func setupButtons() {
@@ -88,7 +85,7 @@ class NewAccVC: UIViewController {
          ]
         let attributedTitle = NSAttributedString(string: "I already have an account...", attributes: yourAttributes)
         loginButton.setAttributedTitle(attributedTitle, for: .normal)
-        loginButton.addTarget(self, action: #selector(pushVC), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(popVC), for: .touchUpInside)
         view.addSubview(loginButton)
         loginButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -99,7 +96,8 @@ class NewAccVC: UIViewController {
         
         // Back Button
         backButton.setImage(UIImage(named: "LeftArrow"), for: .normal)
-        backButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
+        backButton.addTarget(self, action:#selector(popVC), for: .touchUpInside)
+
         view.addSubview(backButton)
         backButton.snp.makeConstraints { make in
             make.leading.equalTo(view.snp.leading).offset(35)
@@ -109,49 +107,25 @@ class NewAccVC: UIViewController {
         }
         
         // User Button
-        userButton.setTitle("Yourself", for: .normal)
-        userButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
-        userButton.setTitleColor(UIColor(red: 0.345, green: 0.192, blue: 0.004, alpha: 1), for: .normal)
-        userButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
-        userButton.layer.cornerRadius = 10
-        userButton.layer.borderWidth = 1
-        userButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
-        
-        userButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
-        
+        userButton = CustomButton(title: "Yourself", width: 220, height: 35)
+        LoginVC.buttonVCMap[userButton] = EditUserProfileVC.self
+        userButton.addTarget(self, action:#selector(pushVC(_:)), for: .touchUpInside)
         view.addSubview(userButton)
         userButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(centerText.snp.bottom).offset(60)
-            make.width.equalTo(220)
-            make.height.equalTo(35)
         }
         
         // Org Button
-        orgButton.setTitle("An Organization", for: .normal)
-        orgButton.titleLabel?.font = UIFont(name: "Roboto-Medium", size: 16)
-        orgButton.setTitleColor(UIColor(red: 0.345, green: 0.192, blue: 0.004, alpha: 1), for: .normal)
-        orgButton.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.79, alpha: 0.8)
-        orgButton.layer.cornerRadius = 10
-        orgButton.layer.borderWidth = 1
-        orgButton.layer.borderColor = UIColor(red: 0.482, green: 0.529, blue: 0.427, alpha: 0.5).cgColor
-        
-        orgButton.addTarget(self, action:#selector(pushVC), for: .touchUpInside)
-        
+        orgButton = CustomButton(title: "An Organization", width: 220, height: 35)
+        LoginVC.buttonVCMap[orgButton] = EditOrgProfileVC.self
+        orgButton.addTarget(self, action:#selector(pushVC(_:)), for: .touchUpInside)
         view.addSubview(orgButton)
         orgButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(userButton.snp.bottom).offset(25)
-            make.width.equalTo(220)
-            make.height.equalTo(35)
         }
     }
-    
-    @objc private func pushVC(_ VC: UIViewController){
-        //let VCtoBePushed = NewAccVC(text: text, delegate: self)
-        //navigationController?.pushViewController(VCtoBePushed, animated: true)
-    }
-
 }
 
 
