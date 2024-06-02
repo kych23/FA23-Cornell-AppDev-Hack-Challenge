@@ -23,14 +23,18 @@ class EditUserProfileVC: UIViewController {
     private var gradYrTextBox = UITextField()
     private var majorTextBox = UITextField()
     private var bioTextBox = UITextView()
+    private var orgsCollectionView: UICollectionView!
     
     // MARK: - Properties (Data)
     private var pfpFile = ""
     private var bgpFile = ""
     private var fullName: String = ""
-    private var gradYr: Int = 0
+    private var gradYr: Int!
     private var major: String = ""
     private var bio: String = ""
+    
+    // TODO -> Creating org collection view (do i need to create org objects?)
+    private var orgs: [Org] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +92,7 @@ class EditUserProfileVC: UIViewController {
         }
         contentView.bringSubviewToFront(backButton)
     }
-    
+
     private func setupTitle() {
         titleText.font = UIFont(name: "Roboto-Bold", size: 30)
         titleText.numberOfLines = 0
